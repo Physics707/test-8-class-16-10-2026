@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060a14">
+<title>Физика · 8 класс · Кипение и давление</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Rubik:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060a14; --panel:#0d1530; --panel2:#0b1428; --line:#22304f;
+  --txt:#eaf2ff; --mut:#8fa0c2;
+  --cy:#22e0ff; --mg:#ff4fd8; --lm:#c9ff3e; --amb:#ffc857; --red:#ff5470; --grn:#4dff9e;
+  --fd:'Unbounded',system-ui,sans-serif; --fb:'Rubik',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:dark}
+body{background:var(--bg);color:var(--txt);font-family:var(--fb);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.bg{position:fixed;inset:0;z-index:-2;background:
+ radial-gradient(60% 50% at 15% 0%,rgba(34,224,255,.13),transparent 60%),
+ radial-gradient(50% 40% at 90% 15%,rgba(255,79,216,.11),transparent 60%),
+ radial-gradient(70% 60% at 50% 110%,rgba(201,255,62,.07),transparent 60%),var(--bg)}
+.bg::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(120,160,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(120,160,255,.05) 1px,transparent 1px);background-size:34px 34px;-webkit-mask-image:radial-gradient(ellipse at 50% 20%,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at 50% 20%,#000 30%,transparent 78%)}
+.orb{position:fixed;border-radius:50%;filter:blur(72px);opacity:.45;z-index:-1;animation:float 15s ease-in-out infinite}
+.orb1{width:260px;height:260px;background:rgba(34,224,255,.32);top:-70px;left:-70px}
+.orb2{width:230px;height:230px;background:rgba(255,79,216,.28);bottom:8%;right:-80px;animation-delay:-7s}
+@keyframes float{50%{transform:translateY(28px) translateX(12px)}}
+main{max-width:760px;margin:0 auto;padding:22px 16px calc(44px + env(safe-area-inset-bottom))}
+.screen{display:none}
+.screen.active{display:block;animation:rise .55s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}}
+.card{background:linear-gradient(180deg,#0d1530,#0a1122);border:1px solid var(--line);border-radius:20px;padding:28px 22px;box-shadow:0 20px 60px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04);position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cy),var(--mg),var(--lm))}
+.eyebrow{font-family:var(--fd);font-size:.66rem;letter-spacing:.3em;color:var(--cy);text-transform:uppercase}
+h1{font-family:var(--fd);font-weight:700;font-size:clamp(1.3rem,5.2vw,2rem);line-height:1.28;margin:12px 0 8px}
+.sub{color:var(--mut);font-size:.95rem;line-height:1.5}
+.teacher{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:#0b142c;margin:18px 0}
+.teacher .ic{flex:0 0 44px;height:44px;display:grid;place-items:center;font-size:1.3rem;border-radius:12px;background:radial-gradient(circle at 30% 25%,rgba(34,224,255,.35),rgba(34,224,255,.08));border:1px solid rgba(34,224,255,.45);box-shadow:0 0 16px rgba(34,224,255,.25)}
+.teacher small{display:block;color:var(--mut);letter-spacing:.12em;font-size:.66rem;text-transform:uppercase}
+.teacher b{font-weight:700}
+.field{margin:14px 0}
+.field label{display:block;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);margin-bottom:7px}
+.field input,.field select{width:100%;background:#0a1124;border:1px solid var(--line);border-radius:12px;padding:13px 14px;color:var(--txt);font-size:16px;font-family:var(--fb);outline:none;transition:.25s;appearance:none;-webkit-appearance:none}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%2322e0ff' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
+.field input:focus,.field select:focus{border-color:var(--cy);box-shadow:0 0 0 3px rgba(34,224,255,.14),0 0 20px rgba(34,224,255,.25)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.chip{font-size:.74rem;padding:7px 11px;border-radius:99px;border:1px solid var(--line);background:#0b142c;color:#bcd0ee}
+.chip b{color:var(--cy)}
+.btn{font-family:var(--fd);font-size:.92rem;letter-spacing:.04em;border-radius:14px;padding:16px 22px;width:100%;cursor:pointer;background:linear-gradient(135deg,#123a52,#182a4d);color:#9fb6d8;border:1px solid #24406b;transition:.25s;margin-top:16px}
+.btn:active{transform:scale(.97)}
+.btn.lit{background:linear-gradient(135deg,var(--cy),#00a6c8 45%,var(--mg));color:#03121c;font-weight:700;border-color:transparent;box-shadow:0 0 22px rgba(34,224,255,.55),0 0 46px rgba(255,79,216,.35);animation:btnPulse 1.8s ease-in-out infinite}
+.btn.lit:hover{transform:translateY(-2px)}
+@keyframes btnPulse{50%{box-shadow:0 0 32px rgba(34,224,255,.8),0 0 62px rgba(255,79,216,.5)}}
+.btn.ghost{background:transparent}
+.err{color:var(--red);font-size:.85rem;min-height:1.2em;margin-top:10px}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+/* disclaimer */
+.rules{list-style:none;margin:18px 0;display:grid;gap:11px}
+.rules li{display:flex;gap:11px;align-items:flex-start;font-size:.94rem;line-height:1.45;color:#d5e2f7}
+.rules li i{font-style:normal;flex:0 0 26px;height:26px;display:grid;place-items:center;border-radius:8px;background:rgba(34,224,255,.1);border:1px solid rgba(34,224,255,.35)}
+.pledge{display:flex;gap:11px;align-items:center;border:1px dashed rgba(201,255,62,.5);border-radius:14px;padding:13px 14px;background:rgba(201,255,62,.05);font-size:.92rem;cursor:pointer}
+.pledge input{width:22px;height:22px;accent-color:var(--lm);flex:none}
+/* test */
+.topbar{position:sticky;top:0;z-index:20;background:rgba(6,10,20,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:12px 0 10px;margin-bottom:14px;border-bottom:1px solid rgba(34,224,255,.12)}
+.meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+.mchip{font-size:.72rem;padding:5px 10px;border-radius:99px;border:1px solid var(--line);background:#0b142c;color:#bcd0ee;white-space:nowrap}
+.mchip.hl{border-color:rgba(255,79,216,.5);color:var(--mg)}
+.prog{height:6px;background:#101b38;border-radius:99px;overflow:hidden;border:1px solid #1c2b50;margin-bottom:10px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--mg));box-shadow:0 0 12px var(--cy);transition:width .45s}
+.status{display:flex;justify-content:space-between;align-items:center}
+#qnum{font-family:var(--fd);font-size:.8rem;letter-spacing:.1em;color:#cfe0ff}
+.timer{font-family:var(--fd);font-size:1rem;color:var(--cy);border:1px solid rgba(34,224,255,.4);border-radius:12px;padding:6px 12px;box-shadow:0 0 14px rgba(34,224,255,.22),inset 0 0 8px rgba(34,224,255,.08);min-width:78px;text-align:center}
+.timer.low{color:var(--red);border-color:rgba(255,84,112,.55);box-shadow:0 0 14px rgba(255,84,112,.4);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:.55}}
+.qcard{animation:qin .45s cubic-bezier(.2,.7,.2,1) both}
+@keyframes qin{from{opacity:0;transform:translateY(14px) scale(.985)}}
+.qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.qtype{font-family:var(--fd);font-size:.6rem;letter-spacing:.24em;padding:5px 10px;border-radius:8px;text-transform:uppercase}
+.qtype.mc{color:var(--cy);border:1px solid rgba(34,224,255,.45)}
+.qtype.calc{color:var(--lm);border:1px solid rgba(201,255,62,.5)}
+.qtext{font-size:clamp(1.02rem,3.9vw,1.15rem);line-height:1.5;font-weight:500}
+.opts{display:grid;gap:10px;margin-top:16px}
+.opt{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:13px 14px;color:var(--txt);font-size:1rem;font-family:var(--fb);cursor:pointer;transition:.2s;-webkit-tap-highlight-color:transparent}
+.opt:hover{border-color:rgba(34,224,255,.6);transform:translateY(-2px)}
+.opt .key{flex:0 0 30px;height:30px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);font-family:var(--fd);font-size:.78rem;color:var(--mut);transition:.2s}
+.opt.sel{border-color:var(--cy);background:linear-gradient(90deg,rgba(34,224,255,.15),rgba(255,79,216,.1));box-shadow:0 0 16px rgba(34,224,255,.5),inset 0 0 12px rgba(34,224,255,.08);animation:neon 1.6s infinite}
+.opt.sel .key{border-color:var(--cy);color:var(--cy);box-shadow:0 0 10px rgba(34,224,255,.6)}
+@keyframes neon{50%{box-shadow:0 0 28px rgba(34,224,255,.75),inset 0 0 16px rgba(34,224,255,.12)}}
+.ans{margin-top:16px}
+.ans input{width:100%;font-size:20px;text-align:center;letter-spacing:.06em;background:#0a1124;border:1px solid var(--line);border-radius:14px;padding:14px;color:var(--txt);outline:none;transition:.25s;font-family:var(--fd)}
+.ans input:focus{border-color:var(--lm);box-shadow:0 0 0 3px rgba(201,255,62,.12),0 0 22px rgba(201,255,62,.3)}
+.hint{color:var(--mut);font-size:.8rem;margin-top:9px;text-align:center}
+.cap{color:var(--mut);font-size:.85rem;font-style:italic;margin-top:10px;text-align:center}
+/* SVG (графики и схемы) */
+.chart,.sketch{width:100%;height:auto;display:block;margin:14px auto 4px}
+.chart{max-width:530px}.sketch{max-width:460px}
+.sg{stroke:#1c2a4d;stroke-width:1}
+.sa{stroke:#6e86b8;stroke-width:1.5;fill:none}
+.sfill{fill:#6e86b8}
+.sn{fill:#8fa0c2;font:11px 'Rubik',sans-serif}
+.su{fill:#d6e6ff;font:italic 600 13px 'Rubik',sans-serif}
+.spl{fill:none;stroke:var(--cy);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+.splg{fill:none;stroke:var(--cy);stroke-width:9;opacity:.2;stroke-linejoin:round;stroke-linecap:round}
+.sdot{fill:#081020;stroke:var(--mg);stroke-width:2.4}
+.spt{fill:var(--mg);font:700 13px 'Unbounded',sans-serif}
+.skc{stroke:#39e6ff;stroke-width:2;fill:rgba(34,224,255,.05)}
+.skw{fill:rgba(57,230,255,.18)}
+.skp{fill:#22314f;stroke:#5f7fb8;stroke-width:1.5}
+.skl{fill:#cfe0ff;font:12.5px 'Rubik',sans-serif}
+.ska{stroke:var(--amb);stroke-width:2.2;fill:none}
+.skf{fill:var(--amb)}
+.skb{fill:#9ff1ff}
+/* results */
+.ringwrap{display:flex;flex-direction:column;align-items:center;margin:8px 0 18px}
+.ring{width:170px;height:170px}
+.ring .bgc{fill:none;stroke:#16223f;stroke-width:12}
+.ring .fgc{fill:none;stroke:url(#rg);stroke-width:12;stroke-linecap:round;transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset 1.4s cubic-bezier(.3,.7,.3,1)}
+.ringtxt{font-family:var(--fd);fill:var(--txt)}
+.grade{font-family:var(--fd);font-size:1rem;text-align:center;margin-bottom:16px}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rcell{border:1px solid var(--line);border-radius:13px;padding:11px 13px;background:var(--panel2)}
+.rcell small{display:block;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.rcell b{font-size:.95rem}
+.sendchip{margin-top:14px;text-align:center;font-size:.82rem;padding:10px;border-radius:12px;border:1px dashed var(--line);color:var(--mut)}
+.sendchip.ok{border-color:rgba(77,255,158,.5);color:var(--grn)}
+/* modals / toast */
+.modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(4,8,18,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:60;padding:20px}
+.modal.show{display:grid;animation:fadein .3s}
+@keyframes fadein{from{opacity:0}}
+.mcard{max-width:420px;width:100%;border-radius:20px;padding:26px 22px;background:linear-gradient(180deg,#131a33,#0b1122);border:1px solid rgba(255,200,87,.55);box-shadow:0 0 40px rgba(255,200,87,.2);text-align:center}
+.mcard.danger{border-color:rgba(255,84,112,.6);box-shadow:0 0 40px rgba(255,84,112,.25)}
+.mcard .mi{font-size:2.4rem;margin-bottom:10px}
+.mcard h3{font-family:var(--fd);font-size:1.05rem;margin-bottom:10px}
+.mcard p{color:#c9d7ef;font-size:.92rem;line-height:1.5}
+#toast{position:fixed;top:calc(12px + env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-160%);background:#101a33;border:1px solid rgba(34,224,255,.5);color:var(--txt);padding:11px 18px;border-radius:12px;box-shadow:0 0 24px rgba(34,224,255,.3);z-index:70;transition:.4s;font-size:.9rem;max-width:92vw;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+footer{margin-top:26px;text-align:center;color:#46587e;font-size:.72rem;letter-spacing:.12em}
+@media (max-width:420px){.rgrid{grid-template-columns:1fr}.card{padding:22px 16px}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+<div class="orb orb1" aria-hidden="true"></div>
+<div class="orb orb2" aria-hidden="true"></div>
+
+<main>
+  <!-- ЭКРАН 1: ВХОД -->
+  <section id="scr-start" class="screen active">
+    <div class="card">
+      <p class="eyebrow">Физика · 8 класс · раздел 8.3.2</p>
+      <h1>Зависимость температуры кипения от внешнего давления</h1>
+      <p class="sub">Тест: количество теплоты при парообразовании и влияние давления на температуру кипения.</p>
+      <div class="teacher">
+        <span class="ic">👨‍🏫</span>
+        <span><small>Учитель физики</small><b>Кунгозин Даулет Багдашұлы</b></span>
+      </div>
+      <div class="chips">
+        <span class="chip"><b>10</b> вопросов</span>
+        <span class="chip"><b>6</b> тестов + <b>4</b> задачи</span>
+        <span class="chip"><b>1,5 мин</b> на вопрос</span>
+        <span class="chip">максимум <b>10</b> баллов</span>
+      </div>
+      <div class="field"><label for="fName">Фамилия и имя учащегося</label>
+        <input id="fName" type="text" autocomplete="name" placeholder="Введите ФИ"></div>
+      <div class="row2">
+        <div class="field"><label for="fClass">Класс</label>
+          <select id="fClass"><option value="" selected disabled>Выберите…</option><option>8 Б</option><option>8 В</option></select></div>
+        <div class="field"><label for="fVar">Вариант</label>
+          <select id="fVar"><option value="" selected disabled>Выберите…</option><option value="1">Вариант 1</option><option value="2">Вариант 2</option></select></div>
+      </div>
+      <p class="err" id="startErr"></p>
+      <button class="btn" id="btnStart">Начать тест →</button>
+    </div>
+    <footer>© 2026 · СИСТЕМА ТЕСТИРОВАНИЯ ПО ФИЗИКЕ</footer>
+  </section>
+
+  <!-- ЭКРАН 2: ДИСКЛЕЙМЕР -->
+  <section id="scr-disc" class="screen">
+    <div class="card">
+      <p class="eyebrow">Перед стартом</p>
+      <h1 style="font-size:1.4rem">Дисклеймер и правила</h1>
+      <div class="chips" id="discChips"></div>
+      <ul class="rules">
+        <li><i>⏱</i><span>10 вопросов: сначала 6 тестовых, затем 4 расчётные задачи. На каждый вопрос — <b>1,5 минуты</b>. Возврата к предыдущим вопросам нет.</span></li>
+        <li><i>🛡</i><span>Сворачивание вкладки, переключение в другое приложение или окно расценивается как списывание: <b>1-й раз — предупреждение, 2-й раз — тест завершается автоматически</b> и попытка засчитывается.</span></li>
+        <li><i>🧮</i><span>Калькулятор, учебник, тетрадь и подсказки из интернета <b>запрещены</b>. Ответ на задачу — только число.</span></li>
+        <li><i>☁️</i><span>Результат (ФИ, класс, вариант, балл, номер попытки) фиксируется и передаётся учителю.</span></li>
+      </ul>
+      <label class="pledge"><input type="checkbox" id="pledge"> Я подтверждаю, что буду выполнять тест самостоятельно, честно и без посторонней помощи.</label>
+      <button class="btn" id="btnAccept" disabled>Я принимаю правила — начать 🚀</button>
+    </div>
+  </section>
+
+  <!-- ЭКРАН 3: ТЕСТ -->
+  <section id="scr-test" class="screen">
+    <div class="topbar">
+      <div class="meta">
+        <span class="mchip" id="tName">—</span>
+        <span class="mchip" id="tClass">—</span>
+        <span class="mchip" id="tVar">—</span>
+        <span class="mchip hl" id="tTry">Попытка 1</span>
+      </div>
+      <div class="prog"><i id="progFill"></i></div>
+      <div class="status"><span id="qnum">Вопрос 1 / 10</span><span class="timer" id="timer">01:30</span></div>
+    </div>
+    <div class="card qcard" id="qcard">
+      <div class="qhead"><span class="qtype mc" id="qtype">Тест</span><span style="color:var(--mut);font-size:.72rem">1 балл</span></div>
+      <p class="qtext" id="qtext"></p>
+      <div id="qbody"></div>
+      <button class="btn nav" id="btnNext" disabled>Далее →</button>
+    </div>
+  </section>
+
+  <!-- ЭКРАН 4: РЕЗУЛЬТАТ -->
+  <section id="scr-res" class="screen">
+    <div class="card" style="text-align:center">
+      <p class="eyebrow">Результаты теста</p>
+      <div class="ringwrap">
+        <svg class="ring" viewBox="0 0 170 170">
+          <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#22e0ff"/><stop offset="1" stop-color="#ff4fd8"/>
+          </linearGradient></defs>
+          <circle class="bgc" cx="85" cy="85" r="70"/>
+          <circle class="fgc" id="ringFg" cx="85" cy="85" r="70" stroke-dasharray="439.8" stroke-dashoffset="439.8"/>
+          <text class="ringtxt" id="ringScore" x="85" y="82" text-anchor="middle" font-size="38" font-weight="700">0</text>
+          <text class="ringtxt" x="85" y="106" text-anchor="middle" font-size="12" fill="#8fa0c2">из 10 баллов</text>
+        </svg>
+      </div>
+      <p class="grade" id="gradeMsg"></p>
+      <div class="rgrid">
+        <div class="rcell"><small>Учащийся</small><b id="rName">—</b></div>
+        <div class="rcell"><small>Класс</small><b id="rClass">—</b></div>
+        <div class="rcell"><small>Вариант</small><b id="rVar">—</b></div>
+        <div class="rcell"><small>Попыток использовано</small><b id="rTry">—</b></div>
+        <div class="rcell" style="grid-column:1/-1"><small>Статус завершения</small><b id="rReason">—</b></div>
+      </div>
+      <div class="sendchip" id="sendChip">—</div>
+      <button class="btn lit" id="btnRestart">Пройти ещё раз ↺</button>
+    </div>
+  </section>
+</main>
+
+<!-- Модалки античита -->
+<div class="modal" id="acWarn"><div class="mcard">
+  <div class="mi">⚠️</div><h3>Предупреждение (1 из 2)</h3>
+  <p>Зафиксирован выход за пределы теста: вкладка была свёрнута или поверх открыто другое окно.<br><br>При повторном нарушении тест будет <b>завершён автоматически</b>, попытка будет засчитана.</p>
+  <button class="btn lit" id="btnWarnOk">Понятно, продолжаю тест</button>
+</div></div>
+
+<div class="modal" id="acEnd"><div class="mcard danger">
+  <div class="mi">🛑</div><h3>Тест завершён системой</h3>
+  <p>Зафиксировано повторное нарушение режима тестирования. Попытка засчитана, результат передан учителю.</p>
+  <button class="btn lit" id="btnEndOk">Посмотреть результаты</button>
+</div></div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+/* ============================================================================
+   ОТПРАВКА РЕЗУЛЬТАТОВ В GOOGLE ТАБЛИЦУ (настройка за 3 шага):
+   1) Создайте пустую Google Таблицу → меню «Расширения» → «Apps Script».
+   2) Вставьте туда код из файла AppsScript.gs (приложен в комплекте) и
+      нажмите «Развернуть» → «Новое развёртывание» → тип «Веб-приложение» →
+      «Выполнять от моего имени» → «Доступ: Все» → «Развернуть».
+   3) Скопируйте полученный URL веб-приложения и вставьте его в GAS_URL ниже.
+----------------------------------------------------------------------------
+   Код Apps Script (дубликат приложен отдельно):
+
+   function doPost(e){
+     try{
+       const lock = LockService.getScriptLock(); lock.waitLock(10000);
+       const d = JSON.parse(e.postData.contents);
+       const ss = SpreadsheetApp.getActiveSpreadsheet();
+       let sh = ss.getSheetByName('Результаты');
+       if(!sh){ sh = ss.insertSheet('Результаты'); }
+       if(sh.getLastRow() === 0){
+         sh.appendRow(['Дата и время','ФИО','Класс','Вариант','Балл','из','Ответы 1-10','Попытка','Причина']);
+         sh.getRange(1,1,1,9).setFontWeight('bold').setBackground('#0d1530').setFontColor('#22e0ff');
+         sh.setFrozenRows(1);
+       }
+       const ans = [];
+       for(let i=0;i<10;i++){ ans.push(d.answers && d.answers[String(i)] ? 1 : 0); }
+       sh.appendRow([new Date(), d.name, d.klass, d.variant, d.score, d.max, ans.join(''), d.attempt, d.reason]);
+       lock.releaseLock();
+       return ContentService.createTextOutput(JSON.stringify({ok:true}))
+              .setMimeType(ContentService.MimeType.JSON);
+     }catch(err){
+       return ContentService.createTextOutput(JSON.stringify({ok:false,error:String(err)}))
+              .setMimeType(ContentService.MimeType.JSON);
+     }
+   }
+   function doGet(){ return ContentService.createTextOutput('Сервер приёма результатов работает. Используйте POST.')
+              .setMimeType(ContentService.MimeType.TEXT); }
+============================================================================ */
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxymbRHFUp4-_oJizqLz3eKiwASaRzzQVmMiMUG7-p-5ZMOfEowlPhEhVjEztaUu_U/exec'; // ← сюда вставьте URL веб-приложения из шага 3
+const QUESTION_TIME = 90; // 1,5 минуты на вопрос
+const HKEY = 'phys8_boil_history_v1';
+
+const $  = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+/* ---------------- SVG: график на «миллиметровке» ---------------- */
+function svgGraph({yMax, yGrid, yLab, pts}){
+  const cell=30, L=56, R=24, T=36, B=50, xMax=12;
+  const cols=xMax, rows=yMax/yGrid;
+  const W=L+cols*cell+R, H=T+rows*cell+B;
+  const X=t=>L+t*cell, Y=v=>T+(rows-(v/yGrid))*cell;
+  let g='';
+  for(let i=0;i<=cols;i++) g+=`<line x1="${X(i)}" y1="${T}" x2="${X(i)}" y2="${T+rows*cell}" class="sg"/>`;
+  for(let j=0;j<=rows;j++) g+=`<line x1="${L}" y1="${Y(j*yGrid)}" x2="${L+cols*cell}" y2="${Y(j*yGrid)}" class="sg"/>`;
+  let ax=`<line x1="${L}" y1="${T-8}" x2="${L}" y2="${T+rows*cell}" class="sa"/>
+          <line x1="${L}" y1="${T+rows*cell}" x2="${L+cols*cell+10}" y2="${T+rows*cell}" class="sa"/>
+          <path d="M ${L} ${T-8} l -4.5 9 l 9 0 z" class="sfill"/>
+          <path d="M ${L+cols*cell+10} ${T+rows*cell} l -9 -4.5 l 0 9 z" class="sfill"/>`;
+  let ticks='';
+  for(let i=0;i<=cols;i+=2)
+    ticks+=`<line x1="${X(i)}" y1="${T+rows*cell}" x2="${X(i)}" y2="${T+rows*cell+5}" class="sa"/>
+            <text x="${X(i)}" y="${T+rows*cell+21}" text-anchor="middle" class="sn">${i}</text>`;
+  for(let v=0;v<=yMax;v+=yLab)
+    ticks+=`<line x1="${L-5}" y1="${Y(v)}" x2="${L}" y2="${Y(v)}" class="sa"/>
+            <text x="${L-9}" y="${Y(v)+4}" text-anchor="end" class="sn">${v}</text>`;
+  const pl  = pts.map(p=>`${X(p[0])},${Y(p[1])}`).join(' ');
+  const dots= pts.map(p=>`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4" class="sdot"/>
+            <text x="${X(p[0])+(p[3]??-11)}" y="${Y(p[1])+(p[4]??-10)}" class="spt">${p[2]}</text>`).join('');
+  const ttl = `<text x="${L-42}" y="${T-16}" class="su">θ, °C</text>
+               <text x="${L+cols*cell+10}" y="${T+rows*cell+40}" text-anchor="end" class="su">t, мин</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img">${g}${ax}${ticks}
+          <polyline points="${pl}" class="splg"/><polyline points="${pl}" class="spl"/>${dots}${ttl}</svg>`;
+}
+const GRAPH_WATER = svgGraph({yMax:120,yGrid:10,yLab:20,pts:[[0,20,'A'],[6,100,'B'],[10,100,'C'],[12,120,'D',10,-8]]});
+const GRAPH_ETHER = svgGraph({yMax:60, yGrid:5, yLab:10,pts:[[0,10,'A'],[5,35,'B'],[9,35,'C'],[12,55,'D',10,-8]]});
+
+/* ---------------- SVG: схема «шприц» (Вариант 1) ---------------- */
+const SVG_SYRINGE = `<svg viewBox="0 0 460 310" class="sketch" role="img">
+  <rect x="170" y="80" width="110" height="180" rx="10" class="skc"/>
+  <rect x="174" y="170" width="102" height="86" class="skw"/>
+  <circle cx="200" cy="235" r="4" class="skb"/><circle cx="225" cy="214" r="3" class="skb"/>
+  <circle cx="247" cy="200" r="5" class="skb"/><circle cx="212" cy="190" r="2.5" class="skb"/>
+  <rect x="174" y="150" width="102" height="18" class="skp"/>
+  <rect x="216" y="58" width="18" height="96" class="skp"/>
+  <rect x="186" y="44" width="78" height="14" rx="6" class="skp"/>
+  <rect x="215" y="260" width="20" height="14" class="skp"/><rect x="220" y="274" width="10" height="12" class="skp"/>
+  <line x1="324" y1="150" x2="324" y2="58" class="ska"/>
+  <polygon points="316,60 332,60 324,44" class="skf"/>
+  <text x="336" y="110" class="skl">поршень</text><text x="336" y="126" class="skl">тянут вверх</text>
+  <text x="34" y="200" class="skl">давление над</text><text x="34" y="216" class="skl">водой падает</text>
+  <line x1="118" y1="208" x2="162" y2="208" class="ska"/><polygon points="160,202 160,214 170,208" class="skf"/>
+  <text x="225" y="302" text-anchor="middle" class="skl">вода при 90 °C снова закипела</text></svg>`;
+
+/* ---------------- SVG: схема «колокол с насосом» (Вариант 2) ---------------- */
+const SVG_BELL = `<svg viewBox="0 0 460 310" class="sketch" role="img">
+  <path d="M92 246 L92 150 Q92 78 186 78 Q280 78 280 150 L280 246" class="skc"/>
+  <rect x="62" y="246" width="248" height="13" rx="5" class="skp"/>
+  <rect x="160" y="196" width="52" height="50" class="skp"/>
+  <rect x="163" y="216" width="46" height="27" class="skw"/>
+  <circle cx="172" cy="210" r="3" class="skb"/><circle cx="188" cy="203" r="4" class="skb"/><circle cx="201" cy="212" r="2.5" class="skb"/>
+  <path d="M186 78 L186 42 L356 42 L356 118" class="skc" fill="none"/>
+  <circle cx="262" cy="42" r="9" class="skp"/><circle cx="262" cy="42" r="2.5" class="skf"/>
+  <polygon points="312,34 312,50 328,42" class="skf"/>
+  <text x="322" y="24" text-anchor="middle" class="skl">воздух откачивают</text>
+  <rect x="326" y="118" width="60" height="80" rx="9" class="skp"/>
+  <line x1="330" y1="152" x2="382" y2="152" stroke="#5f7fb8" stroke-width="2"/>
+  <rect x="350" y="92" width="12" height="26" class="skp"/><rect x="334" y="84" width="44" height="9" rx="4" class="skp"/>
+  <text x="356" y="222" text-anchor="middle" class="skl">насос</text>
+  <text x="186" y="290" text-anchor="middle" class="skl">вода при 60 °C закипела без нагревания</text></svg>`;
+
+/* ---------------- ВОПРОСЫ ---------------- */
+const DATA = {
+ v1:{
+  mc:[
+   {text:'В высокогорье атмосферное давление заметно ниже нормального. При какой температуре там закипит вода?',
+    opts:['Выше 100 °C','Ровно при 100 °C','Ниже 100 °C','Вода в горах не кипит'],a:2},
+   {text:'Почему в скороварке продукты варятся быстрее, чем в обычной кастрюле?',
+    opts:['Давление внутри понижено, поэтому вода кипит при температуре ниже 100 °C',
+          'Давление внутри повышено, поэтому вода кипит при температуре выше 100 °C',
+          'Стенки скороварки не пропускают тепло наружу',
+          'В скороварке давление на воду не действует'],a:1},
+   {text:'Как ведёт себя температура жидкости во время кипения при неизменном давлении?',
+    opts:['Постепенно увеличивается','Постепенно уменьшается','Остаётся неизменной','Сначала растёт, затем уменьшается'],a:2},
+   {text:'На рисунке показан график зависимости температуры воды от времени нагревания при нормальном давлении. Какой участок соответствует кипению воды?',
+    svg:GRAPH_WATER,
+    opts:['Участок AB','Участок BC','Участок CD','Весь график целиком'],a:1},
+   {text:'При каком внешнем давлении температура кипения воды равна ровно 100 °C?',
+    opts:['При любом давлении','При нормальном атмосферном давлении (≈ 101 кПа)','Только в вакууме','При давлении выше 300 кПа'],a:1},
+   {text:'На схеме показан опыт: в шприце находится горячая вода (90 °C). Когда поршень потянули вверх, давление над водой уменьшилось и вода закипела. Почему это произошло?',
+    svg:SVG_SYRINGE,
+    opts:['При уменьшении давления температура кипения воды понижается',
+          'При уменьшении давления температура кипения воды повышается',
+          'При уменьшении давления вода дополнительно нагревается',
+          'Давление никак не влияет на температуру кипения'],a:0}],
+  calc:[
+   {text:'Какое количество теплоты потребуется, чтобы обратить в пар 2 кг воды, уже нагретой до температуры кипения? Удельная теплота парообразования воды — 2,3 МДж/кг. Ответ запишите в мегаджоулях.',a:4.6},
+   {text:'Для обращения в пар 0,5 кг неизвестной жидкости, нагретой до температуры кипения, потребовалось 1,15 МДж теплоты. Определите удельную теплоту парообразования этой жидкости в МДж/кг.',a:2.3},
+   {text:'Имея 2,7 МДж теплоты, можно полностью обратить в пар некоторое количество спирта, нагретого до температуры кипения. Удельная теплота парообразования спирта — 0,9 МДж/кг. Какова масса этого спирта в килограммах?',a:3},
+   {text:'В чайнике при температуре кипения полностью выкипело 500 г воды. Сколько теплоты на это затрачено? Удельная теплота парообразования воды — 2,3 МДж/кг. Ответ запишите в килоджоулях.',a:1150}]
+ },
+ v2:{
+  mc:[
+   {text:'Альпинист поднялся высоко в горы, где атмосферное давление заметно ниже нормального. Что произойдёт с температурой кипения воды?',
+    opts:['Станет выше 100 °C','Останется равной 100 °C','Станет ниже 100 °C','Станет равной 0 °C'],a:2},
+   {text:'Что нужно сделать, чтобы жидкость кипела при температуре выше её обычной температуры кипения?',
+    opts:['Увеличить давление на её поверхность','Уменьшить давление на её поверхность','Взять больший объём жидкости','Уменьшить мощность нагревателя'],a:0},
+   {text:'Кипение — это парообразование, которое происходит…',
+    opts:['Только со свободной поверхности жидкости','Одновременно по всему объёму жидкости с образованием пузырьков пара','Только при температуре выше 100 °C','Только при повышенном давлении'],a:1},
+   {text:'На рисунке показан график зависимости температуры некоторой жидкости от времени нагревания. Чему равна температура кипения этой жидкости?',
+    svg:GRAPH_ETHER,
+    opts:['10 °C','35 °C','45 °C','60 °C'],a:1},
+   {text:'Даны два утверждения: 1) чем больше давление над поверхностью жидкости, тем выше её температура кипения; 2) чем больше давление над поверхностью жидкости, тем ниже её температура кипения. Верно ли какое-либо из них?',
+    opts:['Верно только 1','Верно только 2','Верны оба утверждения','Оба утверждения неверны'],a:0},
+   {text:'На схеме под стеклянным колоколом стоит стакан с водой при 60 °C. Насос начинает откачивать воздух из-под колокола, и вода закипает, хотя её не нагревают. Чем это объясняется?',
+    svg:SVG_BELL,
+    opts:['При уменьшении давления температура кипения воды становится ниже 60 °C',
+          'При уменьшении давления температура кипения воды становится выше 60 °C',
+          'При откачке воздуха температура воды резко повышается',
+          'Давление воздуха не влияет на температуру кипения воды'],a:0}],
+  calc:[
+   {text:'При конденсации 3 кг водяного пара при температуре 100 °C выделилось некоторое количество теплоты. Удельная теплота парообразования воды — 2,3 МДж/кг. Какое количество теплоты выделилось? Ответ в мегаджоулях.',a:6.9},
+   {text:'При конденсации 2 кг пара неизвестного вещества при постоянной температуре выделилось 1,8 МДж теплоты. Определите удельную теплоту парообразования этого вещества в МДж/кг.',a:0.9},
+   {text:'Имеется 4,6 МДж теплоты. Какую массу воды, нагретой до температуры кипения, можно полностью обратить в пар? Удельная теплота парообразования воды — 2,3 МДж/кг. Ответ в килограммах.',a:2},
+   {text:'Из открытого сосуда полностью испарилось 200 г эфира при его температуре кипения. Сколько теплоты на это потребовалось? Удельная теплота парообразования эфира — 0,4 МДж/кг. Ответ запишите в килоджоулях.',a:80}]
+ }
+};
+
+/* ---------------- СОСТОЯНИЕ ---------------- */
+const S={name:'',klass:'',variant:'',questions:[],idx:0,answers:[],attempt:1,finished:false,lastRec:null};
+let testActive=false, violations=0, acCooldown=0, warnOpen=false, tInt=null, tLeft=QUESTION_TIME;
+
+const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+const show=id=>{$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});};
+let toastT; const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);};
+
+const loadHist=()=>{try{return JSON.parse(localStorage.getItem(HKEY))||[];}catch(e){return[];}};
+const saveHist=h=>{try{localStorage.setItem(HKEY,JSON.stringify(h));}catch(e){}};
+const normName=n=>n.trim().replace(/\s+/g,' ').toLowerCase();
+const attemptsFor=(n,k,v)=>loadHist().filter(r=>normName(r.name)===normName(n)&&r.klass===k&&String(r.variant)===String(v)).length;
+
+/* ---------------- СТАРТОВЫЙ ЭКРАН ---------------- */
+$('#btnStart').onclick=()=>{
+  const name=$('#fName').value.trim().replace(/\s+/g,' ');
+  const klass=$('#fClass').value, variant=$('#fVar').value;
+  const err=$('#startErr'); err.textContent='';
+  if(name.length<3||!name.includes(' ')){err.textContent='Введите фамилию и имя полностью (два слова).';$('#fName').classList.add('shake');setTimeout(()=>$('#fName').classList.remove('shake'),450);return;}
+  if(!klass){err.textContent='Выберите класс.';return;}
+  if(!variant){err.textContent='Выберите вариант.';return;}
+  S.name=name;S.klass=klass;S.variant=variant;
+  const used=attemptsFor(name,klass,variant);
+  $('#discChips').innerHTML=`<span class="chip">👤 <b>${name}</b></span><span class="chip">Класс: <b>${klass}</b></span><span class="chip">Вариант: <b>${variant}</b></span><span class="chip">Это будет попытка <b>№ ${used+1}</b></span>`;
+  $('#pledge').checked=false;$('#btnAccept').disabled=true;
+  show('scr-disc');
+};
+$('#pledge').onchange=e=>$('#btnAccept').disabled=!e.target.checked;
+$('#btnAccept').onclick=startTest;
+
+/* ---------------- ЗАПУСК ТЕСТА ---------------- */
+function buildQuestions(){
+  const d = DATA['v' + S.variant];
+  const mc = d.mc.map(q => {
+    const order = [0,1,2,3].sort(() => Math.random() - .5);
+    return { ...q, type: 'mc', opts: order.map(i => q.opts[i]), a: order.indexOf(q.a) };
+  });
+  const calc = d.calc.map(q => ({ ...q, type: 'calc' }));
+  S.questions = [...mc, ...calc];
+}
+
+function startTest(){
+  S.attempt=attemptsFor(S.name,S.klass,S.variant)+1;
+  S.idx=0;S.answers=Array(10).fill(undefined);S.finished=false;S.lastRec=null;
+  violations=0;acCooldown=0;buildQuestions();
+  $('#tName').textContent=S.name;$('#tClass').textContent=S.klass;
+  $('#tVar').textContent='Вариант '+S.variant;$('#tTry').textContent='Попытка '+S.attempt;
+  show('scr-test');testActive=true;render();
+}
+
+/* ---------------- РЕНДЕР ВОПРОСА ---------------- */
+function render(){
+  const q=S.questions[S.idx];
+  $('#qnum').textContent=`Вопрос ${S.idx+1} / ${S.questions.length}`;
+  $('#qtype').textContent=q.type==='mc'?'Тест':'Задача';
+  $('#qtype').className='qtype '+(q.type==='mc'?'mc':'calc');
+  $('#qtext').textContent=q.text;
+  const zone=$('#qbody');zone.innerHTML='';
+  if(q.svg)zone.insertAdjacentHTML('beforeend',q.svg);
+  if(q.type==='mc'){
+    const wrap=document.createElement('div');wrap.className='opts';
+    q.opts.forEach((o,i)=>{
+      const b=document.createElement('button');b.type='button';b.className='opt';
+      b.innerHTML=`<span class="key">${'АБВГ'[i]}</span><span>${o}</span>`;
+      b.onclick=()=>{wrap.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');S.answers[S.idx]=i;toggleBtn(true);};
+      wrap.appendChild(b);
+    });
+    zone.appendChild(wrap);
+  }else{
+    zone.insertAdjacentHTML('beforeend',
+      `<div class="ans"><input id="ans" type="text" inputmode="decimal" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ваш ответ — число">
+       <p class="hint">Ответ — только число, без единиц измерения. Дробную часть отделяйте запятой или точкой.</p></div>`);
+    const inp=$('#ans');
+    inp.addEventListener('input',()=>{inp.value=inp.value.replace(/[^0-9.,\-]/g,'');toggleBtn(inp.value.trim()!=='');});
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('#btnNext').disabled)next();});
+  }
+  const btn=$('#btnNext');btn.textContent=S.idx===9?'Завершить тест ✔':'Далее →';
+  toggleBtn(false);updateProgress();resetTimer();
+  const c=$('#qcard');c.style.animation='none';void c.offsetWidth;c.style.animation='';
+}
+function toggleBtn(on){$('#btnNext').classList.toggle('lit',on);$('#btnNext').disabled=!on;}
+function updateProgress(){$('#progFill').style.width=(S.idx/S.questions.length*100)+'%';}
+$('#btnNext').onclick=next;
+
+function next(){
+  if(S.finished)return;
+  const q=S.questions[S.idx];
+  if(q.type==='calc'){
+    const v=($('#ans').value.trim().replace(',','.'));
+    S.answers[S.idx]=(v!==''&&isFinite(parseFloat(v))&&Math.abs(parseFloat(v)-q.a)<1e-9)?1:0;
+  }
+  if(S.idx===S.questions.length-1){$('#progFill').style.width='100%';finish('Завершён самостоятельно');}
+  else{S.idx++;render();}
+}
+
+/* ---------------- ТАЙМЕР ---------------- */
+function resetTimer(){
+  tLeft=QUESTION_TIME;paintTimer();clearInterval(tInt);
+  tInt=setInterval(()=>{tLeft--;paintTimer();
+    if(tLeft<=0){clearInterval(tInt);toast('⏰ Время вышло — переходим к следующему вопросу');setTimeout(next,700);}
+  },1000);
+}
+function paintTimer(){const el=$('#timer');el.textContent=fmt(Math.max(tLeft,0));el.classList.toggle('low',tLeft<=20);}
+function stopTimer(){clearInterval(tInt);}
+
+/* ---------------- АНТИЧИТ ----------------
+   Первый уход из теста → предупреждение, второй → автозавершение.
+   Системная клавиатура НЕ вызывает эти события браузера, поэтому
+   ложных срабатываний на айфонах и Samsung при вводе ответов нет. */
+function violation(){
+  if(!testActive||Date.now()<acCooldown)return;
+  acCooldown=Date.now()+3000;violations++;
+  if(violations===1){warnOpen=true;$('#acWarn').classList.add('show');}
+  else{finish('Завершён автоматически: повторный уход со страницы',true);}
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)violation();});
+window.addEventListener('blur',()=>setTimeout(()=>{if(!document.hasFocus())violation();},700));
+window.addEventListener('pagehide',()=>{if(testActive)finish('Тест закрыт: сворачивание страницы',true);});
+window.addEventListener('beforeunload',e=>{if(testActive){e.preventDefault();e.returnValue='';}});
+$('#btnWarnOk').onclick=()=>{warnOpen=false;$('#acWarn').classList.remove('show');acCooldown=Date.now()+2500;};
+$('#btnEndOk').onclick=()=>{$('#acEnd').classList.remove('show');showResults(S.lastRec);};
+
+/* ---------------- ЗАВЕРШЕНИЕ И РЕЗУЛЬТАТЫ ---------------- */
+function finish(reason,auto=false){
+  if(S.finished)return;S.finished=true;testActive=false;stopTimer();
+  const score=S.answers.filter(x=>x===1).length;
+  const rec={name:S.name,klass:S.klass,variant:S.variant,score,attempt:S.attempt,
+             answers:S.answers.map(x=>x===1?1:0),reason,ts:new Date().toISOString()};
+  S.lastRec=rec;
+  const h=loadHist();h.push(rec);saveHist(h);
+  if(auto){$('#acEnd').classList.add('show');}else{showResults(rec);}
+}
+function gradeMsg(s){
+  if(s===10)return['🏆','Идеально! Максимальный результат!'];
+  if(s>=8) return['🔥','Отличный результат!'];
+  if(s>=6) return['💪','Хорошо! Осталось закрепить детали.'];
+  if(s>=4) return['📖','Неплохо, но повторите тему.' ];
+  return['🧪','Тема пока не усвоена — повторите § и попробуйте снова.'];
+}
+function showResults(rec){
+  if(!rec)return;
+  show('scr-res');
+  $('#rName').textContent=rec.name;$('#rClass').textContent=rec.klass;
+  $('#rVar').textContent='Вариант '+rec.variant;$('#rTry').textContent=rec.attempt;
+  $('#rReason').textContent=rec.reason;
+  const [ico,msg]=gradeMsg(rec.score);
+  $('#gradeMsg').textContent=`${ico} ${msg}`;
+  $('#ringScore').textContent=rec.score;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    $('#ringFg').style.strokeDashoffset=439.8*(1-rec.score/10);
+  }));
+  sendToSheets(rec);
+}
+async function sendToSheets(r){
+  const chip=$('#sendChip');
+  if(!GAS_URL){chip.textContent='💾 Локальный режим: укажите GAS_URL для отправки в Google Таблицу';return;}
+  chip.textContent='⏳ Отправка результата учителю…';
+  const payload={name:r.name,klass:r.klass,variant:r.variant,score:r.score,max:10,attempt:r.attempt,
+                 reason:r.reason,answers:Object.fromEntries(r.answers.map((v,i)=>[i,v])),ts:r.ts};
+  try{
+    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify(payload)});
+    chip.textContent='☁️ Результат отправлен в Google Таблицу';chip.className='sendchip ok';
+  }catch(e){chip.textContent='💾 Нет связи: результат сохранён на устройстве';}
+}
+$('#btnRestart').onclick=()=>{$('#ringFg').style.strokeDashoffset=439.8;$('#fName').value=S.name;$('#fClass').value=S.klass;$('#fVar').value=S.variant;show('scr-start');};
+</script>
+</body>
+</html>
